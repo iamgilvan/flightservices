@@ -19,6 +19,14 @@ public class Passenger {
     @JoinColumn(name = "flight_id")
     private Flight flight;
 
+    public Passenger() {}
+
+    public Passenger(String firstName, String lastName, String email, Flight flight) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.flight = flight;
+    }
     public Long getId() {
         return id;
     }

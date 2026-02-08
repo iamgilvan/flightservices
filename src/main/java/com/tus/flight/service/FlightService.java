@@ -1,8 +1,9 @@
 package com.tus.flight.service;
 
 import com.tus.flight.dto.FlightDTO;
-import com.tus.flight.dto.PassangerDTO;
+import com.tus.flight.dto.PassengerDTO;
 import com.tus.flight.exception.ResourceNotFoundException;
+import com.tus.flight.mapper.FlightMapper;
 import com.tus.flight.model.Flight;
 import com.tus.flight.model.Passenger;
 import com.tus.flight.repo.FlightRepository;
@@ -14,9 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -28,15 +29,18 @@ public class FlightService {
     @Autowired
     private PassengerRepository passengerRepository;
 
+    @Autowired
+    private FlightMapper flightMapper;
+
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     public Page<FlightDTO> getAllFlights(Pageable pageable) {
-        return flightRepository.findAll(pageable).map(this::convertToFlightDTO);
+        return flightRepository.findAll(pageable).map(flightMapper::toFlightDTO);
     }
 
     public FlightDTO createFlight(FlightDTO dto) {
         Flight entity = new Flight(dto.getFlightNumber(), dto.getOperatingAirlines(), dto.getDepartureCity(), dto.getArrivalCity(), dto.getDateOfDeparture(), dto.getEstimatedDepartureTime() );
-        return convertToFlightDTO(flightRepository.save(entity));
+        return flightMapper.toFlightDTO(flightRepository.save(entity));
     }
 
     public void deleteFlight(Long id) {
@@ -46,32 +50,28 @@ public class FlightService {
 
     public List<FlightDTO> findByDate(LocalDate date) {
         return flightRepository.findByDateOfDeparture(date).stream()
-                .map(this::convertToFlightDTO)
+                .map(flightMapper::toFlightDTO)
                 .collect(Collectors.toList());
     }
 
-    public List<PassangerDTO> getPassengersByFlight(Long flightId) {
+    public List<PassengerDTO> getPassengersByFlight(Long flightId) {
         Flight flight = flightRepository.findById(flightId)
                 .orElseThrow(() -> new EntityNotFoundException("Flight not found"));
 
         return flight.getPassengers().stream()
-                .map(this::convertToReservationDTO)
+                .map(flightMapper::toPassengerDTO)
                 .collect(Collectors.toList());
     }
 
     @Transactional
-    public PassangerDTO addPassengerToFlight(Long flightId, PassangerDTO dto) {
+    public PassengerDTO addPassengerToFlight(Long flightId, PassengerDTO dto) {
         Flight flight = flightRepository.findById(flightId)
                 .orElseThrow(() -> new EntityNotFoundException("Flight not found"));
 
-        Passenger passenger = new Passenger();
-        passenger.setFirstName(dto.getFirstName());
-        passenger.setLastName(dto.getLastName());
-        passenger.setEmail(dto.getEmail());
-        passenger.setFlight(flight);
+        Passenger passenger = new Passenger(dto.getFirstName(), dto.getLastName() , dto.getEmail() , flight);
 
         Passenger saved = passengerRepository.save(passenger);
-        return convertToReservationDTO(saved);
+        return flightMapper.toPassengerDTO(saved);
     }
 
 
@@ -82,42 +82,15 @@ public class FlightService {
         flight.setFlightNumber(dto.getFlightNumber());
         flight.setDepartureCity(dto.getDepartureCity());
         flight.setArrivalCity(dto.getArrivalCity());
+        flight.setOperatingAirlines(dto.getOperatingAirlines());
+
+        if(dto.getEstimatedDepartureTime() != null) {
+            flight.setEstimatedDepartureTime(Time.valueOf(dto.getEstimatedDepartureTime()));
+        }
         if(dto.getDateOfDeparture() != null) {
             flight.setDateOfDeparture(LocalDate.parse(dto.getDateOfDeparture()));
         }
 
-        return convertToFlightDTO(flightRepository.save(flight));
+        return flightMapper.toFlightDTO(flightRepository.save(flight));
     }
-
-
-    private FlightDTO convertToFlightDTO(Flight flight) {
-        FlightDTO dto = new FlightDTO();
-        dto.setId(flight.getId());
-        dto.setFlightNumber(flight.getFlightNumber());
-        dto.setDepartureCity(flight.getDepartureCity());
-        dto.setArrivalCity(flight.getArrivalCity());
-        dto.setOperatingAirlines(flight.getOperatingAirlines());
-        dto.setEstimatedDepartureTime(flight.getEstimatedDepartureTime().toString());
-        if (flight.getDateOfDeparture() != null) {
-            dto.setDateOfDeparture(flight.getDateOfDeparture().format(formatter));
-        }
-        if (flight.getPassengers() != null) {
-            List<PassangerDTO> passengerDTOs = new ArrayList<>();
-            for (Passenger p : flight.getPassengers()) {
-                passengerDTOs.add(convertToReservationDTO(p));
-            }
-            dto.setPassengers(passengerDTOs);
-        }
-        return dto;
-    }
-
-    private PassangerDTO convertToReservationDTO(Passenger p) {
-        PassangerDTO dto = new PassangerDTO();
-        dto.setFirstName(p.getFirstName());
-        dto.setLastName(p.getLastName());
-        dto.setEmail(p.getEmail());
-        dto.setFlightId(p.getFlight().getId());
-        return dto;
-    }
-
 }

@@ -2,7 +2,6 @@ package com.tus.flight.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +15,7 @@ public class FlightDTO {
     private String dateOfDeparture;
     private String estimatedDepartureTime;
 
-    private List<PassangerDTO> passengers = new ArrayList<>();
+    private List<PassengerDTO> passengers = new ArrayList<>();
 
     public String getFlightNumber() {
         return flightNumber;
@@ -66,11 +65,11 @@ public class FlightDTO {
         this.id = id;
     }
 
-    public List<PassangerDTO> getPassengers() {
+    public List<PassengerDTO> getPassengers() {
         return passengers;
     }
 
-    public void setPassengers(List<PassangerDTO> passengers) {
+    public void setPassengers(List<PassengerDTO> passengers) {
         this.passengers = passengers;
     }
 

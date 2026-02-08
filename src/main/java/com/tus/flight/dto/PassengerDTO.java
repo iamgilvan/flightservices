@@ -1,6 +1,6 @@
 package com.tus.flight.dto;
 
-public class PassangerDTO {
+public class PassengerDTO {
     private Long flightId;
     private String firstName;
     private String lastName;

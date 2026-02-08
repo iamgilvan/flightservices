@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.tus.flight.dto.FlightDTO;
-import com.tus.flight.dto.PassangerDTO;
+import com.tus.flight.dto.PassengerDTO;
 import com.tus.flight.service.FlightService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -43,12 +43,12 @@ public class FlightController {
 	}
 
 	@GetMapping("/{id}/passengers")
-	public ResponseEntity<List<PassangerDTO>> listPassengers(@PathVariable Long id) {
+	public ResponseEntity<List<PassengerDTO>> listPassengers(@PathVariable Long id) {
 		return ResponseEntity.ok(flightService.getPassengersByFlight(id));
 	}
 
 	@PostMapping("/{id}/passengers")
-	public ResponseEntity<PassangerDTO> createPassenger(@PathVariable Long id, @RequestBody PassangerDTO dto) {
+	public ResponseEntity<PassengerDTO> createPassenger(@PathVariable Long id, @RequestBody PassengerDTO dto) {
 		return ResponseEntity.status(HttpStatus.CREATED)
 				.body(flightService.addPassengerToFlight(id, dto));
 	}
