@@ -1,18 +1,13 @@
 package com.tus.flight.dto;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PassengerDTO {
-    private Long flightId;
     private String firstName;
     private String lastName;
     private String email;
-
-    public Long getFlightId() {
-        return flightId;
-    }
-
-    public void setFlightId(Long flightId) {
-        this.flightId = flightId;
-    }
+    private List<Long> flightIds = new ArrayList<>();
 
     public String getFirstName() {
         return firstName;
@@ -37,4 +32,13 @@ public class PassengerDTO {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public List<Long> getFlightIds() {
+        return flightIds;
+    }
+
+    public void setFlightIds(List<Long> flightIds) {
+        this.flightIds = flightIds;
+    }
+
 }

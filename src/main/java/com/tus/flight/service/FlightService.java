@@ -68,7 +68,11 @@ public class FlightService {
         Flight flight = flightRepository.findById(flightId)
                 .orElseThrow(() -> new EntityNotFoundException("Flight not found"));
 
-        Passenger passenger = new Passenger(dto.getFirstName(), dto.getLastName() , dto.getEmail() , flight);
+        Passenger passenger = new Passenger(dto.getFirstName(), dto.getLastName() , dto.getEmail());
+
+        Passenger savedPassenger = passengerRepository.save(passenger);
+
+        flight.getPassengers().add(savedPassenger);
 
         Passenger saved = passengerRepository.save(passenger);
         return flightMapper.toPassengerDTO(saved);

@@ -1,6 +1,8 @@
 package com.tus.flight.model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "passenger")
@@ -15,17 +17,15 @@ public class Passenger {
     @Column(name = "email")
     private String email;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "flight_id")
-    private Flight flight;
+    @ManyToMany(mappedBy = "passengers")
+    private List<Flight> flights = new ArrayList<>();
 
     public Passenger() {}
 
-    public Passenger(String firstName, String lastName, String email, Flight flight) {
+    public Passenger(String firstName, String lastName, String email) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.flight = flight;
     }
     public Long getId() {
         return id;
@@ -59,11 +59,12 @@ public class Passenger {
         this.email = email;
     }
 
-    public Flight getFlight() {
-        return flight;
+    public List<Flight> getFlights() {
+        return flights;
     }
 
-    public void setFlight(Flight flight) {
-        this.flight = flight;
+    public void setFlights(List<Flight> flights) {
+        this.flights = flights;
     }
+
 }

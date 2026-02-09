@@ -28,7 +28,12 @@ public class Flight {
 	@Column(name = "estimated_departure_time")
 	private Time estimatedDepartureTime;
 
-	@OneToMany(mappedBy = "flight", cascade = CascadeType.ALL, orphanRemoval = true)
+	@ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@JoinTable(
+			name = "RESERVATION",
+			joinColumns = @JoinColumn(name = "FLIGHT_ID"),
+			inverseJoinColumns = @JoinColumn(name = "PASSENGER_ID")
+	)
 	private List<Passenger> passengers = new ArrayList<>();
 
 	public Flight() {

@@ -21,8 +21,11 @@ public class FlightMapper {
         dto.setFirstName(passenger.getFirstName());
         dto.setLastName(passenger.getLastName());
         dto.setEmail(passenger.getEmail());
-        if (passenger.getFlight() != null) {
-            dto.setFlightId(passenger.getFlight().getId());
+        if (passenger.getFlights() != null) {
+            List<Long> ids = passenger.getFlights().stream()
+                    .map(Flight::getId)
+                    .collect(Collectors.toList());
+            dto.setFlightIds(ids);
         }
         return dto;
     }
