@@ -23,14 +23,17 @@ import java.util.stream.Collectors;
 
 @Service
 public class FlightService {
-    @Autowired
-    private FlightRepository flightRepository;
+    private final FlightRepository flightRepository;
+    private final PassengerRepository passengerRepository;
+    private final FlightMapper flightMapper;
 
-    @Autowired
-    private PassengerRepository passengerRepository;
-
-    @Autowired
-    private FlightMapper flightMapper;
+    public FlightService(FlightRepository flightRepository,
+                         PassengerRepository passengerRepository,
+                         FlightMapper flightMapper) {
+        this.flightRepository = flightRepository;
+        this.passengerRepository = passengerRepository;
+        this.flightMapper = flightMapper;
+    }
 
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
