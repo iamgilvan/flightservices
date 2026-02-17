@@ -77,8 +77,7 @@ public class FlightService {
 
         flight.getPassengers().add(savedPassenger);
 
-        Passenger saved = passengerRepository.save(passenger);
-        return flightMapper.toPassengerDTO(saved);
+        return flightMapper.toPassengerDTO(savedPassenger);
     }
 
 

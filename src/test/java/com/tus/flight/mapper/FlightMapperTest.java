@@ -1,6 +1,8 @@
 package com.tus.flight.mapper;
 
+import com.tus.flight.dto.FlightDTO;
 import com.tus.flight.dto.PassengerDTO;
+import com.tus.flight.model.Flight;
 import com.tus.flight.model.Passenger;
 import org.junit.jupiter.api.Test;
 
@@ -23,5 +25,23 @@ public class FlightMapperTest {
         assertEquals("Gilvan", dto.getFirstName());
         assertEquals("Almeida", dto.getLastName());
         assertEquals("gilvan@example.com", dto.getEmail());
+    }
+
+    @Test
+    void toFlightDTO_ShouldMapFieldsCorrectly() {
+        // Arrange
+        Flight flight = new Flight();
+        flight.setFlightNumber("AA123");
+        flight.setDepartureCity("New York");
+        flight.setArrivalCity("London");
+
+        // Act
+        FlightDTO dto = flightMapper.toFlightDTO(flight);
+
+        // Assert
+        assertNotNull(dto);
+        assertEquals("AA123", dto.getFlightNumber());
+        assertEquals("New York", dto.getDepartureCity());
+        assertEquals("London", dto.getArrivalCity());
     }
 }
