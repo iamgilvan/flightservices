@@ -21,19 +21,12 @@ services:
       retries: 30
 
   flight:
-    build: .
-    image: iamgilvan/flightservice:0.1.0
-    deploy:
-      replicas: 3 #  Swarm
-      update_config:
-        parallelism: 1
-        delay: 10s
-      restart_policy:
-        condition: on-failure
+    image: iamgilvan/flight-service:latest
     container_name: flight-service
-    restart: on-failure
+    restart: always
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/reservation
       SPRING_DATASOURCE_USERNAME: root
