@@ -101,12 +101,7 @@
 					</execution>
 				</executions>
 				<configuration>
-					<excludes>
-						<exclude>
-							<groupId>org.projectlombok</groupId>
-							<artifactId>lombok</artifactId>
-						</exclude>
-					</excludes>
+					<mainClass>com.tus.flight.FlightservicesApplication</mainClass>
 				</configuration>
 			</plugin>
 		</plugins>
