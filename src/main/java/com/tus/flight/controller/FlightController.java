@@ -34,7 +34,7 @@ public class FlightController {
 	public ResponseEntity<FlightDTO> create(@RequestBody FlightDTO dto) {
 		return new ResponseEntity<>(flightService.createFlight(dto), HttpStatus.CREATED);
 	}
-	// Test ci/cd demo: Delete flight by id
+
 	@DeleteMapping("/{id}")
 	public ResponseEntity<Void> delete(@PathVariable Long id) {
 		flightService.deleteFlight(id);
