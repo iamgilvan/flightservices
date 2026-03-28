@@ -41,6 +41,7 @@ public class FlightController {
 		return ResponseEntity.noContent().build();
 	}
 
+	//demo comment
 	@PutMapping("/{id}")
 	public ResponseEntity<FlightDTO> update(@PathVariable Long id, @RequestBody FlightDTO dto) {
 		return ResponseEntity.ok(flightService.updateFlight(id, dto));
